@@ -1,0 +1,77 @@
+{
+	"name": "PixelMatch",
+	"events": [
+		{
+			"eventType": "comment",
+			"text": "Call this function with the UIDs of the drawing canvas objects to begin the comparison"
+		},
+		{
+			"functionName": "PIXELMATCH_startComparison",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [
+				{
+					"name": "canvasUID1",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"sid": 184575929054708
+				},
+				{
+					"name": "canvasUID2",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"sid": 116521363048140
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"type": "script",
+					"script": "try {\nconst ci1 = runtime.getInstanceByUid(localVars.canvasUID1);\nconst ci2 = runtime.getInstanceByUid(localVars.canvasUID2);\n\nconst ipd1 = await ci1.getImagePixelData();\nconst ipd2 = await ci2.getImagePixelData();\n\nconst mpc = pixelmatch(ipd1.data, ipd2.data, null, ipd1.width, ipd1.height);\n\nruntime.callFunction(\"PIXELMATCH_onComparisonSuccess\", mpc);\n\n} catch(error) {\n\tconsole.error(\"[PIXELMATCH_startComparison] Something went wrong:\");\n\tconsole.error(error);\n}"
+				}
+			],
+			"sid": 977210229571688
+		},
+		{
+			"eventType": "comment",
+			"text": "This function will be called if comparison succeeds"
+		},
+		{
+			"functionName": "PIXELMATCH_onComparisonSuccess",
+			"functionDescription": "",
+			"functionCategory": "",
+			"functionReturnType": "none",
+			"functionCopyPicked": false,
+			"functionIsAsync": false,
+			"functionParameters": [
+				{
+					"name": "mismatchedPixelCount",
+					"type": "number",
+					"initialValue": "0",
+					"comment": "",
+					"sid": 412925110013723
+				}
+			],
+			"eventType": "function-block",
+			"conditions": [],
+			"actions": [
+				{
+					"id": "alert",
+					"objectClass": "Browser",
+					"sid": 307348974062720,
+					"parameters": {
+						"message": "\"Canvas diff: \" & mismatchedPixelCount"
+					}
+				}
+			],
+			"sid": 581190601242994
+		}
+	],
+	"sid": 532851598779082
+}
